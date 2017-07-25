@@ -10,7 +10,8 @@ import XCTest
 @testable import GWUnitTestProject
 
 class GWUnitTestProjectTests: XCTestCase {
-    
+    let vc = ViewController()
+
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -22,15 +23,32 @@ class GWUnitTestProjectTests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCTAssert(vc.calculator(input: 10) == 1000)
+        XCTAssertFalse(vc.calculator(input: 10) == 100)
+        XCTAssert(vc.calculator(input: -5) == -500)
     }
     
     func testPerformanceExample() {
-        // This is an example of a performance test case.
         self.measure {
-            // Put the code you want to measure the time of here.
+            self.vc.measureTest(checkResult: { (result, errorString) in
+                XCTAssert(result == "result")
+                XCTAssert(errorString == "errorString")
+            })
         }
     }
     
+    func testApiCallbackExample(){
+        let expectationExmple = expectation(description: "expectationExmple")
+        
+        self.vc.callBackTest(backResult: { (backResult, errorString) in
+            XCTAssert(backResult == "result")
+            XCTAssert(errorString == "errorString")
+            expectationExmple.fulfill()
+        })
+        waitForExpectations(timeout: 3){ error in
+            if let error = error {
+                XCTFail("Error: \(error.localizedDescription)")
+            }
+        }
+    }
 }
